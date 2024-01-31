@@ -8,12 +8,11 @@ const port = 3000;
 app.get('/', async (req, res) => {
   try {
     const response = await getChatCompletion();
-    //ensures the message is a string not object
-    const message = response.data.choices[0].message.content || 'No message received';
-    res.send(`<!DOCTYPE html><html><head><title>API Response</title></head><body><h1>${message}</h1></body></html>`);
+    const message = response.data.choices[0].message;
+    res.send(message);
   } catch (error) {
-    console.log('Error:', error);
-    res.send('<h1>Error occurred</h1>');
+    console.error('Error:', error);
+    res.status(500).send('Internal Server Error');
   }
 });
 
