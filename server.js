@@ -1,12 +1,20 @@
 const axios = require('axios');
 const express = require('express');
-
+require('dotenv').config();
+const OPENAI_API_KEY = process.env.apiKey;
 const app = express();
 const port = 3000;
-const OPENAI_API_KEY = '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';
 
 app.get('/', (req, res) => {
-  res.send('Hello, world!');
+  axios.get('https://api.openai.com/v1/chat/completions')
+    .then((response) => {
+      const message = response.data.choices[0].message;
+      res.send(`<h1>${message}</h1>`);
+    })
+    .catch((error) => {
+      console.log('Error:', error);
+      res.send('<h1>Error occurred</h1>');
+    });
 });
 
 app.get('/quiz', (req, res) => {
