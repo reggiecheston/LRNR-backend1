@@ -5,16 +5,16 @@ const OPENAI_API_KEY = process.env.apiKey;
 const app = express();
 const port = 3000;
 
-app.get('/', (req, res) => {
-  axios.get('https://api.openai.com/v1/chat/completions')
-    .then((response) => {
-      const message = response.data.choices[0].message;
-      res.send(`<h1>${message}</h1>`);
-    })
-    .catch((error) => {
-      console.log('Error:', error);
-      res.send('<h1>Error occurred</h1>');
-    });
+app.get('/', async (req, res) => {
+  try {
+    const response = await getChatCompletion();
+    //ensures the message is a string not object
+    const message = response.data.choices[0].message.content || 'No message received';
+    res.send(`<!DOCTYPE html><html><head><title>API Response</title></head><body><h1>${message}</h1></body></html>`);
+  } catch (error) {
+    console.log('Error:', error);
+    res.send('<h1>Error occurred</h1>');
+  }
 });
 
 app.get('/quiz', (req, res) => {
@@ -24,7 +24,6 @@ app.get('/quiz', (req, res) => {
 app.get('/options', (req, res) => {
   res.send('Hello, world!');
 });
-
 
 app.get('/answer', (req, res) => {
   res.send('Hello, world!');
@@ -50,34 +49,13 @@ async function getChatCompletion() {
         },
       }
     );
-
-    console.log(response.data.choices[0]);
+    return response;
   } catch (error) {
-    console.error(error);
+    console.error("Error response:", error.response);
+    throw error;
   }
-}
-
-function getInfo() {
-  const url = 'https://api.openai.com/v1/chat/completions';
-  return axios
-    .get(url, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${OPENAI_API_KEY}`,
-      },
-    })
-    .then((response) => {
-      console.log(response.data.choices[0].message);
-    })
-    .catch((error) => console.log('error', error));
 }
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
-  getChatCompletion();
-  getInfo();
 });
-
-
-// print itt into page then fetch from that page
-// start making pages
