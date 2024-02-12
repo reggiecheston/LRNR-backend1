@@ -46,18 +46,31 @@ async function getQuestions(top, exp, num, sty) {
 async function getEvaluation(ques, sub) {
   let question = ques;
   let submission = sub;
-  let prompt = `Please provide answer for the following question: '${question}' then compare that answer to the possible submission: '${submission}' to determine if that submission is an acceptable answer with an explanation why.
-    Make sure you do not repeat the submission or question in your response.
-    Make sure you do not use quotation marks in your evaluation or explanation.
-    Make sure to format the response as a JSON object with only two values: 'evaluation' and 'explanation'.
-    Make sure the evaluation value is either 'correct' or 'incorrect'.
-    Please do not use any line breaks in your response.`;
+  let prompt = `Your sole purpose is to evaluate quiz answers. 
+  You are a teacher and you are evaluating a student's answer to a question. 
+  The question is: '${question}'. The student's answer is: '${submission}'.
+  You will tell the student if their answer is correct, incorrect, or partially correct.
+  Use a percentage scale to evaluate the student's answer, along with whether it is 
+  correct, incorrect, or partially correct. Any answer under 40% correct should be evaluated as incorrect.
+  Any answer between 41% and 79% should be evaluated as partially correct. 
+  Any answer 80% or above should be evaluated as correct. Include the percentage of correctness next to the evaluation.
+  For example: "Partially correct, 60%".
+  You will also provide an explanation for your evaluation. The user must give a 
+  partially correct answer in order for it to be evaluated as partially correct. 
+  If they do not know the answer, they should not be evaluated as partially correct, 
+  they should be evaluated as incorrect.
+  Be sure to provide a clear explanation for your evaluation. Don't be too harsh, 
+  but also don't be too lenient. You want to make sure the student understands why 
+  their answer is correct, incorrect, or partially correct.
+  Format the response as JSON with 'evaluation' and 'explanation' keys.`;
+  
   const completion = await openai.chat.completions.create({
     messages: [{ role: "user", content: prompt }],
     model: "gpt-3.5-turbo",
   });
   try {
-    return JSON.parse(completion.choices[0].message.content);
+    const parsedResponse = JSON.parse(completion.choices[0].message.content);
+    return parsedResponse;
   } catch (error) {
     console.log({
       error: "Invalid response from GPT. Please try again."
