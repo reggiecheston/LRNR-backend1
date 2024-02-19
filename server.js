@@ -1,7 +1,7 @@
-import OpenAI from "openai";
-import dotenv from 'dotenv';
-import express from 'express';
-import cors from 'cors';
+const OpenAI = require("openai");
+const dotenv = require("dotenv");
+const express = require("express");
+const cors = require("cors");
 
 dotenv.config();
 
@@ -13,15 +13,14 @@ const openai = new OpenAI({
 });
 
 app.use(cors());
-app.use(express.json()); 
+app.use(express.json());
 
 async function getQuestions(top, exp, num, sty) {
   let topic = top;
   let expertise = exp;
   let numQuestions = num;
   let style = sty;
-  let prompt =
-    `Generate ${numQuestions} questions on a ${expertise} level regarding ${topic}. Questions should be simple. Do not answer the questions.
+  let prompt = `Generate ${numQuestions} questions on a ${expertise} level regarding ${topic}. Questions should be simple. Do not answer the questions.
     Please word the questions as if you were ${style}, make sure to integrate this in each question but keep the questions based on ${topic}.
     Each question must be based on ${topic}.
     Format the response as an array with each question being a string value in the array.
@@ -31,15 +30,17 @@ async function getQuestions(top, exp, num, sty) {
     model: "gpt-3.5-turbo",
   });
   try {
-    console.log(completion.choices[0].message.content)
-    return JSON.parse(`{"Questions": ${completion.choices[0].message.content}}`);
+    console.log(completion.choices[0].message.content);
+    return JSON.parse(
+      `{"Questions": ${completion.choices[0].message.content}}`
+    );
   } catch (error) {
     console.log({
-      error: "Invalid response from GPT. Please try again."
+      error: "Invalid response from GPT. Please try again.",
     });
     return {
-      error: "Invalid response from GPT. Please try again."
-    }
+      error: "Invalid response from GPT. Please try again.",
+    };
   }
 }
 
@@ -63,7 +64,7 @@ async function getEvaluation(ques, sub) {
   but also don't be too lenient. You want to make sure the student understands why 
   their answer is correct, incorrect, or partially correct.
   Format the response as JSON with 'evaluation' and 'explanation' keys.`;
-  
+
   const completion = await openai.chat.completions.create({
     messages: [{ role: "user", content: prompt }],
     model: "gpt-3.5-turbo",
@@ -73,19 +74,19 @@ async function getEvaluation(ques, sub) {
     return parsedResponse;
   } catch (error) {
     console.log({
-      error: "Invalid response from GPT. Please try again."
+      error: "Invalid response from GPT. Please try again.",
     });
     return {
-      error: "Invalid response from GPT. Please try again."
-    }
+      error: "Invalid response from GPT. Please try again.",
+    };
   }
 }
 
-app.get('/', (_req, res) => {
-  res.send('Hello LRNR!');
+app.get("/", (_req, res) => {
+  res.send("Hello LRNR!");
 });
 
-app.get('/questions', async (req, res) => {
+app.get("/questions", async (req, res) => {
   const topic = req.query.topic;
   const expertise = req.query.expertise;
   const numQuestions = req.query.numQuestions;
@@ -94,13 +95,16 @@ app.get('/questions', async (req, res) => {
   res.json(questions);
 });
 
-app.post('/questions', async (req, res) => {
-  const questions = req.body; 
-  console.log('Received questions for storage or further processing:', questions);
-  res.status(201).send({ message: 'Questions submitted successfully' });
+app.post("/questions", async (req, res) => {
+  const questions = req.body;
+  console.log(
+    "Received questions for storage or further processing:",
+    questions
+  );
+  res.status(201).send({ message: "Questions submitted successfully" });
 });
 
-app.get('/evaluation', async (req, res) => {
+app.get("/evaluation", async (req, res) => {
   const question = req.query.question;
   const submission = req.query.submission;
   const evaluation = await getEvaluation(question, submission);
@@ -110,3 +114,5 @@ app.get('/evaluation', async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
 });
+
+module.exports = { app, getQuestions, getEvaluation };
