@@ -1,7 +1,7 @@
-const OpenAI = require("openai");
-const dotenv = require("dotenv");
-const express = require("express");
-const cors = require("cors");
+import OpenAI from "openai";
+import dotenv from "dotenv";
+import express from "express";
+import cors from "cors";
 
 dotenv.config();
 
@@ -114,5 +114,3 @@ app.get("/evaluation", async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
 });
-
-module.exports = { app, getQuestions, getEvaluation };
