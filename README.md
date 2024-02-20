@@ -36,7 +36,7 @@ This project uses Node.js, NPM libraries, Jest, and the OpenAI API.
 
 #### Requests
 
-The **_server.js_** file outlines requests:
+The **_server.js_** file outlines the following requests:
 
 > **GET /:**
 
@@ -48,7 +48,7 @@ Fetches generated questions based on the specified topic, expertise level, numbe
 
 > **POST /questions:**
 
-Endpoint for submitting questions for storage or further processing (demonstration purposes).
+Submits questions for storage or further processing (demonstration purposes).
 
 > **GET /evaluation:**
 
