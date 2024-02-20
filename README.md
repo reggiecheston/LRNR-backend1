@@ -39,13 +39,20 @@ This project uses Node.js, NPM libraries, Jest, and the OpenAI API.
 The **_server.js_** file outlines requests:
 
 > **GET /:**
-> Returns a simple greeting from the server.
+
+Returns a simple greeting from the server.
+
 > **GET /questions:**
-> Fetches generated questions based on the specified topic, expertise level, number of questions, and style.
+
+Fetches generated questions based on the specified topic, expertise level, number of questions, and style.
+
 > **POST /questions:**
-> Endpoint for submitting questions for storage or further processing (demonstration purposes).
+
+Endpoint for submitting questions for storage or further processing (demonstration purposes).
+
 > **GET /evaluation:**
-> Evaluates a submitted answer to a question, providing a correctness percentage and an explanation.
+
+Evaluates a submitted answer to a question, providing a correctness percentage and an explanation.
 
 ## Testing
 
