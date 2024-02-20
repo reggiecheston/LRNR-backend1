@@ -81,3 +81,7 @@ Enjoy!
 ##### [React.js docs](https://legacy.reactjs.org/docs/getting-started.html)
 
 ##### [NPM docs](https://docs.npmjs.com/)
+
+##### [Jest docs](https://jestjs.io/docs/getting-started)
+
+##### [OpenAI docs](https://platform.openai.com/docs/overview)
